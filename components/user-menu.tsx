@@ -23,7 +23,6 @@ function getUserInitials(name: string) {
 }
 
 export function UserMenu({ user }: UserMenuProps) {
-  // @ts-ignore
   return (
     <div className="flex items-center justify-between">
       <DropdownMenu>

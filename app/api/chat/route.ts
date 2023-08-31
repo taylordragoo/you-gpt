@@ -7,11 +7,8 @@ import { nanoid } from '@/lib/utils'
 
 export const runtime = 'edge'
 
-let token: string = JSON.parse(<string>localStorage.getItem('ai-token'));
-
 const configuration = new Configuration({
-  // @ts-ignore
-  apiKey: token
+  apiKey: process.env.OPENAI_API_KEY
 })
 
 const openai = new OpenAIApi(configuration)
@@ -32,7 +29,7 @@ export async function POST(req: Request) {
   }
 
   const res = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4',
     messages,
     temperature: 0.7,
     stream: true
