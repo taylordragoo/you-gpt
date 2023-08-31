@@ -7,8 +7,11 @@ import { nanoid } from '@/lib/utils'
 
 export const runtime = 'edge'
 
+let token: string = JSON.parse(<string>localStorage.getItem('ai-token'));
+
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY
+  // @ts-ignore
+  apiKey: token
 })
 
 const openai = new OpenAIApi(configuration)

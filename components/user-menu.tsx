@@ -13,6 +13,17 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { IconExternalLink } from '@/components/ui/icons'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog'
+import { useState } from 'react'
+import {Input} from "@/components/ui/input";
+import {useLocalStorage} from "@/lib/hooks/use-local-storage";
 
 export interface UserMenuProps {
   user: Session['user']
@@ -24,6 +35,16 @@ function getUserInitials(name: string) {
 }
 
 export function UserMenu({ user }: UserMenuProps) {
+  const [previewToken, setPreviewToken] = useLocalStorage<string | null>(
+      'ai-token',
+      null
+  )
+
+  const token: string = JSON.parse(localStorage.getItem('ai-token') as string);
+  const [previewTokenDialog, setPreviewTokenDialog] = useState(false);
+  const [previewTokenInput, setPreviewTokenInput] = useState(previewToken ?? '')
+
+  // @ts-ignore
   return (
     <div className="flex items-center justify-between">
       <DropdownMenu>
@@ -49,16 +70,11 @@ export function UserMenu({ user }: UserMenuProps) {
             <div className="text-xs text-zinc-500">{user?.email}</div>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <a
-              href="https://vercel.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-between w-full text-xs"
-            >
-              Vercel Homepage
-              <IconExternalLink className="w-3 h-3 ml-auto" />
-            </a>
+          <DropdownMenuItem
+            className="flex-col items-start"
+            onClick={() => setPreviewTokenDialog(true)}
+          >
+            Settings
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() =>
@@ -72,6 +88,42 @@ export function UserMenu({ user }: UserMenuProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <Dialog open={previewTokenDialog} onOpenChange={setPreviewTokenDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enter your OpenAI Key</DialogTitle>
+            <DialogDescription>
+              If you have not obtained your OpenAI API key, you can do so by{' '}
+              <a
+                  href="https://platform.openai.com/signup/"
+                  className="underline"
+              >
+                signing up
+              </a>{' '}
+              on the OpenAI website. This is only necessary for preview
+              environments so that the open source community can test the app.
+              The token will be saved to your browser&apos;s local storage under
+              the name <code className="font-mono">ai-token</code>.
+            </DialogDescription>
+          </DialogHeader>
+          <Input
+              value={previewTokenInput}
+              placeholder={token}
+              onChange={e => setPreviewTokenInput(e.target.value)}
+          />
+          <DialogFooter className="items-center">
+            <Button
+                onClick={() => {
+                  setPreviewToken(previewTokenInput)
+                  setPreviewTokenDialog(false)
+                }}
+            >
+              Save Token
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

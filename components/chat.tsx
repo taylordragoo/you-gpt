@@ -60,6 +60,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
           <EmptyScreen setInput={setInput} />
         )}
       </div>
+
       <ChatPanel
         id={id}
         isLoading={isLoading}
@@ -77,10 +78,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
             <DialogTitle>Enter your OpenAI Key</DialogTitle>
             <DialogDescription>
               If you have not obtained your OpenAI API key, you can do so by{' '}
-              <a
-                href="https://platform.openai.com/signup/"
-                className="underline"
-              >
+              <a href="https://platform.openai.com/signup/" className="underline">
                 signing up
               </a>{' '}
               on the OpenAI website. This is only necessary for preview
@@ -95,8 +93,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
             onChange={e => setPreviewTokenInput(e.target.value)}
           />
           <DialogFooter className="items-center">
-            <Button
-              onClick={() => {
+            <Button onClick={() => {
                 setPreviewToken(previewTokenInput)
                 setPreviewTokenDialog(false)
               }}
